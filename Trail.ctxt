@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.params=start\ end\ c
+comment0.target=Trail(java.awt.geom.Point2D,\ java.awt.geom.Point2D,\ java.awt.Color)
+comment1.params=
+comment1.target=int\ getAge()
+comment2.params=
+comment2.target=void\ age()
+comment3.params=g2d
+comment3.target=void\ paint(java.awt.Graphics2D)
+numComments=4
