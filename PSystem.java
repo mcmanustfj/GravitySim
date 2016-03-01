@@ -25,7 +25,7 @@ public class PSystem extends JPanel
     private ArrayList<Trail> traceLines;
     static boolean showTrails = true;    //right now only used for debugging but can be implemented as a checkbox or something
     final static int INTERVAL = 10; //time (in ms) between update calls
-    final static int TRAILSIZE = 512; //length of trail; should reduce memory leaking
+    final static int TRAILSIZE = 2048; //length of trail; should reduce memory leaking
     JFrame frame;
     Graphics2D g;
 
@@ -75,7 +75,7 @@ public class PSystem extends JPanel
                 }
 
                 public void mouseDragged(MouseEvent e) {
-                    if (e.isShiftDown()) {
+                    if (e.isShiftDown()) { //click and drag to move viewport
                         movedX += -e.getX() + p.getX();
                         movedY += -e.getY() + p.getY();
                         p = e.getPoint();
@@ -97,13 +97,18 @@ public class PSystem extends JPanel
                             if(!orbiting)
                                 b.setVel(e.getX()-p.getX(), e.getY() - p.getY());
                             else {
-                                Body c = Collections.max(allBodies);
+                                Body c = b.findHighestGravity(allBodies);
                                 double dx = b.getX() - c.getX();
                                 double dy = b.getY() - c.getY();
+                                
                                 double v0 = Math.sqrt(G * c.getMass()/Math.sqrt(dx * dx + dy * dy));
                                 double theta = Math.atan2(dy,dx); //getting the tangent line to circle
-                                b.setVel(Math.sin(-theta)*v0, Math.cos(theta) * v0);
-
+                                if(Math.random() < 0.5) {
+                                    b.setVel(Math.sin(-theta)*v0 + c.getVX(), Math.cos(theta) * v0 + c.getVY());
+                                }
+                                else {
+                                    b.setVel(-Math.sin(-theta)*v0 + c.getVX(), -Math.cos(theta) * v0 + c.getVY());
+                                }
                             }
                         }
                         else

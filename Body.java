@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Collection;
 import java.awt.Color;
 public class Body implements Comparable<Body>
 {
@@ -80,6 +81,7 @@ public class Body implements Comparable<Body>
         color = c;
         tracePoints = new LinkedList<Point2D>();
     }
+
     public void addPoint(Point2D p)
     {
         if(tracePoints.size() >= PSystem.TRAILSIZE)
@@ -155,12 +157,29 @@ public class Body implements Comparable<Body>
                 (posY * b.getR() + b.getY() * radius)/(radius + b.getR()));
 
     }
-    
+
     public Point2D getCenter() {
         return new Point2D.Double(posX, posY);
     }
 
     public int compareTo(Body b) {
         return (int)(mass-b.mass);
+    }
+
+    public Body findHighestGravity(List<Body> bodies) { //finds the body that exerts the strongest pull of gravity on this body
+        double g = 0;
+        Body currentBody = null;
+        for(Body b : bodies)
+        {
+            if(b == this) continue;
+            double dx = b.getX() - this.getX();
+            double dy = b.getY() - this.getY();
+            double acc0 = b.getMass() / (dx * dx + dy * dy); //GMm/r^2 but G and m are constant
+            if (acc0 > g) {
+                g = acc0;
+                currentBody = b;
+            }
+        }
+        return currentBody;
     }
 }
